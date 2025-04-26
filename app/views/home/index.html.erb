@@ -1,0 +1,10 @@
+<h1>Stock Trading Page</h1>
+
+<%= form_with url: root_path, method: :get, local: true do %>
+  <%= label_tag :symbol, "Enter Symbol:" %>
+  <%= text_field_tag :symbol, params[:symbol] || "MSFT" %>
+  <%= submit_tag "Check" %>
+<% end %>
+
+<p><strong>Symbol:</strong> <%= @symbol %></p>
+<p><strong>Stock Price:</strong> <%= @stock_price %></p>
