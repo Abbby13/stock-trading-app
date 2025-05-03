@@ -1,0 +1,25 @@
+<h3>Available Stocks</h3>
+
+<% if @stocks.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Symbol</th>
+        <th>Company Name</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @stocks.each do |stock| %>
+        <tr>
+          <td><%= stock.symbol %></td>
+          <td><%= stock.company_name %></td>
+          <td>$<%= number_with_precision(stock.current_price, precision: 2) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No stocks found.</p>
+<% end %>
+
