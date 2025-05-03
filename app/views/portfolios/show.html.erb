@@ -1,0 +1,73 @@
+<h2>My Portfolio</h2>
+<p>Welcome, <%= current_user.email %> — here’s what you own:</p>
+<hr>
+
+<% if @holdings.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Symbol</th>
+        <th>Quantity</th>
+        <th>Avg. Buy Price</th>
+        <th>Current Price</th>
+        <th>Unrealized P/L</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @holdings.each do |holding| %>
+        <% stock         = holding.stock %>
+        <% current_price = stock.current_price %>
+        <% cost          = holding.avg_price * holding.quantity %>
+        <% value         = current_price * holding.quantity %>
+        <tr>
+          <td><%= stock.symbol %></td>
+          <td><%= holding.quantity %></td>
+          <td>$<%= number_with_precision(holding.avg_price, precision: 2) %></td>
+          <td>$<%= number_with_precision(current_price, precision: 2) %></td>
+          <td>
+            $<%= number_with_precision(value - cost, precision: 2) %>
+            (<%= number_with_precision(((value - cost) / cost * 100), precision: 2) %>%)
+          </td>
+          <td>
+            <%= link_to(
+                  "Buy",
+                  new_transaction_path(
+                    stock_id: stock.id,
+                    transaction_type: "buy"
+                  ),
+                  class: "btn btn-primary"
+                ) %>
+            <%= link_to(
+                  "Sell",
+                  new_transaction_path(
+                    stock_id: stock.id,
+                    transaction_type: "sell"
+                  ),
+                  class: "btn btn-warning"
+                ) %>
+            <%= link_to(
+                  "History",
+                  transactions_path(stock_id: stock.id),
+                  class: "btn btn-link"
+                ) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <p class="mt-4"><strong>Total Portfolio Value:</strong>
+    $<%= number_with_precision(
+           @holdings.sum { |h| h.quantity * h.stock.current_price },
+           precision: 2
+         ) %>
+  </p>
+
+  <p>
+    <%= link_to "Buy More Stocks", stocks_path, class: "btn btn-primary" %>
+  </p>
+<% else %>
+  <p>You don’t own any stocks yet.</p>
+  <p><%= link_to "Buy some now", stocks_path, class: "btn btn-primary" %></p>
+<% end %>

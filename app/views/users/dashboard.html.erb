@@ -1,0 +1,84 @@
+<h2>Trader Dashboard</h2>
+<p>Welcome, <%= current_user.email %></p>
+<hr>
+
+<p>
+  <%= link_to "My Portfolio", portfolio_path, class: "btn-secondary" %>
+</p>
+
+
+<h2>Search for a Stock</h2>
+<%= form_with url: trader_dashboard_path, method: :get, local: true do |form| %>
+  <div>
+    <%= form.label :query, "Search for a stock:" %><br>
+    <%= form.text_field :query, placeholder: "e.g. AAPL or Apple" %>
+    <%= form.submit "Search" %>
+  </div>
+<% end %>
+
+<hr>
+
+<h3>Available Stocks</h3>
+<% if @stocks.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Symbol</th>
+        <th>Company Name</th>
+        <th>Price</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @stocks.each do |stock| %>
+        <tr>
+          <td><%= stock.symbol %></td>
+          <td><%= stock.company_name %></td>
+          <td>$<%= number_with_precision(stock.current_price, precision: 2) %></td>
+          <td>
+            <%= link_to "Buy", new_transaction_path(stock_id: stock.id), class: "btn" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No matching stocks found.</p>
+<% end %>
+
+<hr>
+
+<hr>
+
+<h3>Recent Transactions</h3>
+
+<% if @recent_transactions.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Symbol</th>
+        <th>Type</th>
+        <th>Qty</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @recent_transactions.each do |t| %>
+        <tr>
+          <td><%= t.created_at.strftime("%b %-d, %Y") %></td>
+          <td><%= t.stock.symbol %></td>
+          <td><%= t.transaction_type.capitalize %></td>
+          <td><%= t.quantity %></td>
+          <td>$<%= number_with_precision(t.price, precision: 2) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No transactions yet.</p>
+<% end %>
+
+<p class="mt-2">
+  <%= link_to "View All Transactions", transactions_path, class: "btn-secondary" %>
+</p>

@@ -1,0 +1,27 @@
+<h2>
+  <%= @transaction.transaction_type.capitalize %> 
+  <%= @stock.symbol %>
+</h2>
+
+<%= form_with model: @transaction, local: true do |form| %>
+  <%= form.hidden_field :stock_id, value: @stock.id %>
+  <%= form.hidden_field :transaction_type, value: @transaction.transaction_type %>
+
+  <div>
+    <%= form.label :quantity,
+        @transaction.transaction_type == "buy" ? "Qty to buy" : "Qty to sell" %><br>
+    <%= form.number_field :quantity, min: 1, required: true %>
+  </div>
+
+  <div>
+    <%= form.label :price, "Price per share" %><br>
+    <%= form.number_field :price, step: 0.01,
+          value: @stock.current_price, required: true %>
+  </div>
+
+  <div>
+    <%= form.submit @transaction.transaction_type.capitalize %>
+  </div>
+<% end %>
+
+
