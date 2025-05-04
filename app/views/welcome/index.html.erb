@@ -4,7 +4,7 @@
   <% if current_user.role == "admin" %>
     <%= link_to "Go to Admin Dashboard", admin_dashboard_path %>
   <% else %>
-    <%= link_to "Go to Trader Dashboard", user_dashboard_path %>
+    <%= link_to "Go to Trader Dashboard", trader_dashboard_path %>
   <% end %>
 
   <%= button_to "Log Out", logout_path, method: :delete %>
