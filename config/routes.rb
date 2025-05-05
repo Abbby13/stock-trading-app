@@ -12,7 +12,6 @@ Rails.application.routes.draw do
   get "welcome/index"
   get "home/index"
 
-  
   get '/admin/dashboard', to: 'admins#dashboard', as: 'admin_dashboard'
 
   get '/admin/traders', to: 'admins#traders_index', as: 'admin_traders'
