@@ -11,6 +11,8 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[8.0].define(version: 2025_05_03_061952) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_03_010212) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_03_015949) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -60,6 +62,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_03_061952) do
     t.boolean "approved"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "approved_at"
   end
 
   add_foreign_key "portfolio_stocks", "portfolios"

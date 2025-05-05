@@ -1,0 +1,22 @@
+<h1>Transactions</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Transaction ID</th>
+      <th>Details</th>
+      <th>Amount</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @transactions.each do |transaction| %>
+      <tr>
+        <td><%= transaction.id %></td>
+        <td><%= transaction.details %></td>
+        <td><%= transaction.amount %></td>
+        <td><%= transaction.created_at.strftime("%B %d, %Y") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
