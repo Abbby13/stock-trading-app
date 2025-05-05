@@ -1,0 +1,28 @@
+<h2>✅ Transaction Confirmed</h2>
+
+<p>
+  You just
+  <strong><%= @transaction.transaction_type.capitalize %></strong>
+  <%= @transaction.quantity %> share<%= "s" if @transaction.quantity != 1 %>
+  of
+  <strong><%= @transaction.stock.symbol %> (<%= @transaction.stock.company_name %>)</strong>
+  at
+  <strong>$<%= number_with_precision(@transaction.price, precision: 2) %> each</strong>.
+</p>
+
+<p>
+  <strong>Total:</strong>
+  $<%= number_with_precision(@transaction.quantity * @transaction.price, precision: 2) %>
+</p>
+
+<p>
+  <strong>Date:</strong>
+  <%= @transaction.created_at
+         .in_time_zone("Asia/Manila")
+         .strftime("%b %-d, %Y at %l:%M %p") %>
+</p>
+
+<hr>
+
+<%= link_to "Back to Dashboard", trader_dashboard_path, class: "btn btn-primary" %>
+<%= link_to "View All Transactions", transactions_path, class: "btn btn-link" %>

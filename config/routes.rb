@@ -36,7 +36,7 @@ Rails.application.routes.draw do
 
   get '/login', to: 'sessions#new'
   post '/login', to: 'sessions#create'
-  delete '/logout', to: 'sessions#destroy'
+  delete '/logout', to: 'sessions#destroy', as: 'logout'
 
   # Trader dashboard
   get '/trader/dashboard', to: 'users#dashboard', as: 'trader_dashboard'
@@ -48,9 +48,20 @@ Rails.application.routes.draw do
   # Stocks route
   get '/stocks', to: 'stocks#index', as: 'stocks'
 
-  # Health check route
-  get "up" => "rails/health#show", as: :rails_health_check
+  resource :portfolio, only: :show do
+    member do
+      get  :deposit
+      post :deposit,   to: 'portfolios#perform_deposit'
+      get  :withdraw
+      post :withdraw,  to: 'portfolios#perform_withdraw'
+    end
+  end
 
-  # Root path route
-  root "welcome#index"
+  resources :transactions, only: [:new, :create, :index] do
+    member do
+      get :confirmation
+    end   # closes member
+  end    
+
+  root to: redirect("/trader/dashboard")
 end
