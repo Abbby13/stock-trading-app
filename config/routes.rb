@@ -15,7 +15,7 @@ Rails.application.routes.draw do
 
   get '/login', to: 'sessions#new'
   post '/login', to: 'sessions#create'
-  delete '/logout', to: 'sessions#destroy'
+  delete '/logout', to: 'sessions#destroy', as: 'logout'
 
   get '/admin/dashboard', to: 'admins#dashboard', as: 'admin_dashboard'
   patch '/admin/promote/:id', to: 'admins#promote', as: 'promote_user'
@@ -26,5 +26,20 @@ Rails.application.routes.draw do
 
   get '/stocks', to: 'stocks#index', as: 'stocks'
 
-  root "welcome#index"
+  resource :portfolio, only: :show do
+    member do
+      get  :deposit
+      post :deposit,   to: 'portfolios#perform_deposit'
+      get  :withdraw
+      post :withdraw,  to: 'portfolios#perform_withdraw'
+    end
+  end
+
+  resources :transactions, only: [:new, :create, :index] do
+    member do
+      get :confirmation
+    end   # closes member
+  end    
+
+  root to: redirect("/trader/dashboard")
 end

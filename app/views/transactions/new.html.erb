@@ -1,7 +1,14 @@
 <h2>
-  <%= @transaction.transaction_type.capitalize %> 
+  <%= @transaction.transaction_type.capitalize %>
   <%= @stock.symbol %>
 </h2>
+
+<%# Show any “insufficient funds” or other flash alerts %>
+<% if flash.now[:alert] %>
+  <div id="error_explanation">
+    <p><strong><%= flash.now[:alert] %></strong></p>
+  </div>
+<% end %>
 
 <%= form_with model: @transaction, local: true do |form| %>
   <%= form.hidden_field :stock_id, value: @stock.id %>
@@ -24,4 +31,5 @@
   </div>
 <% end %>
 
-
+<%= link_to "Back to Dashboard", trader_dashboard_path, class: "btn btn-primary" %>
+<%= link_to "My Portfolio", portfolio_path, class: "btn btn-primary" %>

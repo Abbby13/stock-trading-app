@@ -1,0 +1,21 @@
+<h2>Withdraw Funds</h2>
+
+<% if flash.now[:alert] %>
+  <div id="error_explanation">
+    <p><strong><%= flash.now[:alert] %></strong></p>
+  </div>
+<% end %>
+
+<%= form_with url: withdraw_portfolio_path, method: :post, local: true do |f| %>
+  <div>
+    <%= f.label :amount, "Amount to withdraw" %><br>
+    <%= f.number_field :amount, step: 0.01, required: true %>
+  </div>
+  <div>
+    <%= f.submit "Withdraw", class: "btn btn-warning" %>
+  </div>
+<% end %>
+
+<p>
+  <%= link_to "← Back to Dashboard", trader_dashboard_path, class: "btn btn-secondary" %>
+</p>

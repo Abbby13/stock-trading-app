@@ -1,0 +1,15 @@
+<h2>Deposit Funds</h2>
+
+<%= form_with url: deposit_portfolio_path, method: :post, local: true do |f| %>
+  <div>
+    <%= f.label :amount, "Amount to deposit" %><br>
+    <%= f.number_field :amount, step: 0.01, required: true %>
+  </div>
+  <div>
+    <%= f.submit "Deposit", class: "btn btn-success" %>
+  </div>
+<% end %>
+
+<p>
+  <%= link_to "← Back to Dashboard", trader_dashboard_path, class: "btn btn-secondary" %>
+</p>
