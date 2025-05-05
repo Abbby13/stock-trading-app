@@ -3,7 +3,8 @@
 <table>
   <thead>
     <tr>
-      <th>Transaction ID</th>
+      <th>TX ID</th>
+      <th>User Email</th> 
       <th>Details</th>
       <th>Amount</th>
       <th>Date</th>
@@ -13,10 +14,16 @@
     <% @transactions.each do |transaction| %>
       <tr>
         <td><%= transaction.id %></td>
-        <td><%= transaction.details %></td>
-        <td><%= transaction.amount %></td>
+        <td><%= transaction.user.email %></td> 
+        <td>
+          <%= "#{transaction.transaction_type.capitalize} #{transaction.quantity} shares of #{transaction.stock.symbol} at #{transaction.price}" %>
+        </td>
+        <td><%= transaction.quantity * transaction.price %></td>
         <td><%= transaction.created_at.strftime("%B %d, %Y") %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
+<br>
+<%= link_to "Back to Dashboard", admin_dashboard_path, class: "button" %>
+

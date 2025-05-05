@@ -1,6 +1,6 @@
 class AdminsController < ApplicationController
   before_action :require_admin
-  before_action :set_trader, only: [:trader_show, :trader_edit, :trader_update, :approve]
+  before_action :set_trader, only: [ :trader_show, :trader_edit, :trader_update, :approve ]
 
   def dashboard
     @traders = User.where(role: "trader")
@@ -10,7 +10,7 @@ class AdminsController < ApplicationController
   def promote
     user = User.find(params[:id])
     user.update(role: 'admin')
-    redirect_to admin_traders_path, notice: 'User promoted to admin.'
+    redirect_to admin_traders_path, notice: "User promoted to admin."
   end
 
   def demote
@@ -45,6 +45,7 @@ class AdminsController < ApplicationController
   end
 
   def trader_show
+    @transactions = @trader.transactions.includes(:stock)
   end
 
   def trader_edit
