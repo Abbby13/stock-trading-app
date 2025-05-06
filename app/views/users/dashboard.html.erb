@@ -15,13 +15,6 @@
 
 <hr>
 
-<hr>
-
-<p>
-  <%= link_to "My Portfolio", portfolio_path, class: "btn-secondary" %>
-</p>
-
-
 <h2>Search for a Stock</h2>
 <%= form_with url: trader_dashboard_path, method: :get, local: true do |form| %>
   <div>
@@ -98,4 +91,3 @@
   <%= link_to "View All Transactions", transactions_path, class: "btn-secondary" %>
 </p>
 
-<%= button_to "Logout", logout_path, method: :delete, data: { confirm: "Log out?" } %>
