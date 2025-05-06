@@ -1,10 +1,10 @@
 class AdminsController < ApplicationController
   before_action :require_admin
-  before_action :set_trader, only: [ :trader_show, :trader_edit, :trader_update, :approve ]
+  before_action :set_trader, only: [:trader_show, :trader_edit, :trader_update, :approve]
 
   def dashboard
     @traders = User.where(role: "trader")
-    @pending_traders = User.where(role: "trader", approved: false)
+    @pending_traders = User.where(role: "trader", approved: [nil, false])
   end
 
   def promote
@@ -20,8 +20,12 @@ class AdminsController < ApplicationController
   end
 
   def approve
-    @trader.update(approved: true, approved_at: Time.current)
-    redirect_to admin_pending_traders_path, notice: "Trader approved successfully."
+    if @trader.update(approved: true, approved_at: Time.current)
+      AdminMailer.approval_email(@trader).deliver_now
+      redirect_to admin_pending_traders_path, notice: "Trader approved successfully."
+    else
+      redirect_to admin_pending_traders_path, alert: "Approval failed: #{@trader.errors.full_messages.to_sentence}"
+    end
   end
 
   def traders_index
@@ -60,12 +64,7 @@ class AdminsController < ApplicationController
   end
 
   def pending_traders
-    @pending_traders = User.where(role: "trader", approved: false)
-  end
-
-  def approve
-    @trader.update(approved: true)
-    redirect_to admin_pending_traders_path, notice: "Trader approved successfully."
+    @pending_traders = User.where(role: "trader", approved: [nil, false])
   end
 
   def transactions_index
