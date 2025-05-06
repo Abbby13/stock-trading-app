@@ -9,7 +9,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     @user.role     = "trader"
     @user.approved = true
-  
+
     if @user.save
       @user.create_portfolio
       UserMailer.pending_signup_email(@user).deliver_later
@@ -19,8 +19,6 @@ class UsersController < ApplicationController
       render :new, status: :unprocessable_entity, formats: [:html]
     end
   end
-  
-  
 
   def dashboard
     @portfolio = current_user.portfolio
@@ -52,4 +50,3 @@ class UsersController < ApplicationController
     params.require(:user).permit(:email, :password, :password_confirmation)
   end
 end
-

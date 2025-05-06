@@ -1,23 +1,41 @@
 <h1>Edit Trader</h1>
 
+<% if flash[:notice] %>
+  <div class="alert alert-success">
+    <%= flash[:notice] %>
+  </div>
+<% end %>
+
+<% if flash[:alert] %>
+  <div class="alert alert-danger">
+    <%= flash[:alert] %>
+  </div>
+<% end %>
+
 <%= form_with model: @trader, url: admin_trader_path(@trader), method: :patch do |form| %>
   <div>
     <%= form.label :email %><br>
-    <%= form.email_field :email %>
+    <%= form.email_field :email, class: "form-control" %>
   </div>
 
   <div>
     <%= form.label :password %><br>
-    <%= form.password_field :password %>
+    <%= form.password_field :password, class: "form-control" %>
   </div>
 
   <div>
     <%= form.label :password_confirmation %><br>
-    <%= form.password_field :password_confirmation %>
+    <%= form.password_field :password_confirmation, class: "form-control" %>
   </div>
 
   <div>
-    <%= form.submit "Update Trader" %>
+    <%= form.submit "Update Trader", class: "btn btn-primary" %>
   </div>
 <% end %>
-<%= link_to "Back to Trader", admin_trader_path(@trader) %>
+
+<hr>
+
+<div class="btn-group-horizontal" style="margin-top: 1rem;">
+  <%= link_to "Back to Trader", admin_trader_path(@trader), class: "btn btn-secondary" %>
+  <%= link_to "Back to Dashboard", admin_dashboard_path, class: "btn btn-secondary" %>
+</div>

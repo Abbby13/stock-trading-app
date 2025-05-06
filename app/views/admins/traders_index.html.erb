@@ -1,39 +1,57 @@
 <h1>All Traders</h1>
 
+<% if flash[:notice] %>
+  <div class="alert alert-success">
+    <%= flash[:notice] %>
+  </div>
+<% end %>
+
+<% if flash[:alert] %>
+  <div class="alert alert-danger">
+    <%= flash[:alert] %>
+  </div>
+<% end %>
+
 <% if @traders.nil? || @traders.empty? %>
   <p>No traders found.</p>
 <% else %>
   <table>
-<thead>
-  <tr>
-    <th>Email</th>
-    <th>Role</th>
-    <th>Registered</th>
-    <th>Approved</th>
-    <th>Actions</th>
-  </tr>
-</thead>
-<tbody>
-  <% @traders.each do |trader| %>
-    <tr>
-      <td><%= trader.email %></td>
-      <td><%= trader.role %></td>
-      <td><%= trader.created_at.strftime("%B %d, %Y") %></td>
-      <td>
-        <%= trader.approved_at.present? ? trader.approved_at.strftime("%B %d, %Y") : "Pending" %>
-      </td>
-      <td>
-        <%= link_to "Show", admin_trader_path(trader) %> |
-        <%= link_to "Edit", edit_admin_trader_path(trader) %> |
-        <%= link_to "Promote to Admin", promote_user_path(trader), method: :patch if trader.role == "trader" %>
-        <%= link_to "Demote to Trader", demote_user_path(trader), method: :patch if trader.role == "admin" %>
-      </td>
-    </tr>
-  <% end %>
-</tbody>
+    <thead>
+      <tr>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Registered</th>
+        <th>Approved</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @traders.each do |trader| %>
+        <tr>
+          <td><%= trader.email %></td>
+          <td><%= trader.role %></td>
+          <td><%= trader.created_at.strftime("%B %d, %Y") %></td>
+          <td>
+            <%= trader.approved_at.present? ? trader.approved_at.strftime("%B %d, %Y") : "Pending" %>
+          </td>
+          <td>
+            <div style="display: flex; gap: 0.5rem;">
+              <%= button_to "Show", admin_trader_path(trader), method: :get, class: "btn btn-primary", form: { style: "display:inline" } %>
+              <%= button_to "Edit", edit_admin_trader_path(trader), method: :get, class: "btn btn-secondary", form: { style: "display:inline" } %>
+              <% if trader.role == 'trader' %>
+                <%= button_to "Promote to Admin", promote_user_path(trader.id), method: :patch, class: "btn btn-warning", form: { style: "display:inline" } %>
+              <% else %>
+                <span>Admin</span>
+              <% end %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
   </table>
 <% end %>
-<br>
-<%= link_to "Create New Trader", new_admin_trader_path, class: "button" %>
-<br>
-<%= link_to "Back to Dashboard", admin_dashboard_path, class: "button" %>
+
+<div class="btn-group-horizontal">
+<%= button_to "Create New Trader", new_admin_trader_path, class: "btn btn-primary", method: :get %>
+<%= button_to "Back to Dashboard", admin_dashboard_path, class: "btn btn-secondary", method: :get %>
+</div>

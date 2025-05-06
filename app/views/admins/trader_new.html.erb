@@ -1,5 +1,17 @@
 <h1>Create New Trader</h1>
 
+<% if flash[:notice] %>
+  <div class="alert alert-success">
+    <%= flash[:notice] %>
+  </div>
+<% end %>
+
+<% if flash[:alert] %>
+  <div class="alert alert-danger">
+    <%= flash[:alert] %>
+  </div>
+<% end %>
+
 <%= form_with model: @trader, url: admin_traders_path, method: :post do |form| %>
   <div>
     <%= form.label :email %><br>
@@ -21,3 +33,6 @@
   </div>
 <% end %>
 <%= link_to "Back to Traders List", admin_traders_path %>
+<br>
+<br>
+<%= link_to "Back to Dashboard", admin_dashboard_path, class: "button" %>

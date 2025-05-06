@@ -1,4 +1,17 @@
 <h3>Pending Traders</h3>
+
+<% if flash[:notice] %>
+  <div class="alert alert-success">
+    <%= flash[:notice] %>
+  </div>
+<% end %>
+
+<% if flash[:alert] %>
+  <div class="alert alert-danger">
+    <%= flash[:alert] %>
+  </div>
+<% end %>
+
 <% if @pending_traders.present? %>
   <table>
     <thead>
@@ -17,7 +30,7 @@
           <td><%= trader.approved ? "Approved" : "Pending Approval" %></td>
           <td>
             <% if !trader.approved %>
-              <%= link_to "Approve", approve_admin_trader_path(trader), method: :patch, class: "button" %>
+              <%= button_to "Approve", approve_admin_trader_path(trader), method: :patch, class: "btn btn-warning" %>
             <% else %>
               <span>Already Approved</span>
             <% end %>
@@ -29,3 +42,4 @@
 <% else %>
   <p>No pending traders.</p>
 <% end %>
+<%= link_to "Back to Dashboard", admin_dashboard_path, class: "btn btn-secondary" %>

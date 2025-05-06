@@ -1,15 +1,26 @@
 <h1>Welcome Admin!</h1>
 <p>You're logged in as <%= current_user.email %></p>
 
-<%= link_to "Trader Details", admin_traders_path, class: "button" %>
-<br>
-<%= link_to "Create New Trader", new_admin_trader_path, class: "button" %>
-<br>
-<%= link_to "Transaction Details", admin_transactions_path, class: "button" %>
+<% if flash[:notice] %>
+  <div class="alert alert-success">
+    <%= flash[:notice] %>
+  </div>
+<% end %>
 
+<% if flash[:alert] %>
+  <div class="alert alert-danger">
+    <%= flash[:alert] %>
+  </div>
+<% end %>
+
+<div class="btn-group-horizontal">
+  <%= button_to "Trader Details", admin_traders_path, class: "btn btn-primary", method: :get %>
+  <%= button_to "Create New Trader", new_admin_trader_path, class: "btn btn-primary", method: :get %>
+  <%= button_to "Transaction Details", admin_transactions_path, class: "btn btn-primary", method: :get %>
+</div>
 <hr>
 
-<h2>All Traders</h2>
+<h2>Recent Traders</h2>
 <table>
   <thead>
     <tr>
@@ -28,16 +39,17 @@
           <td><%= trader.role %></td>
           <td>
             <% if trader.role == 'trader' %>
-              <%= link_to 'Promote to Admin', promote_user_path(trader.id), method: :patch, data: { turbo_method: :patch } %>
+              <%= button_to 'Promote to Admin', promote_user_path(trader.id), method: :patch, class: "btn btn-warning" %>
             <% else %>
-              <%= link_to "Demote to Trader", demote_user_path(trader), method: :patch, class: "button" %>
+              <span>Admin</span>
             <% end %>
           </td>
         </tr>
       <% end %>
-    <% end %>
-  </tbody>
-</table>
+    </tbody>
+  </table>
+  <%= button_to "View All Traders", admin_traders_path, class: "btn btn-primary", method: :get %>
+<% end %>
 
 <hr>
 
@@ -60,7 +72,7 @@
           <td><%= trader.approved ? "Approved" : "Pending Approval" %></td>
           <td>
             <% if !trader.approved %>
-            <%= button_to "Approve", approve_admin_trader_path(trader), method: :patch, class: "button" %>
+              <%= button_to "Approve", approve_admin_trader_path(trader), method: :patch, class: "btn btn-warning" %>
             <% else %>
               <span>Already Approved</span>
             <% end %>
@@ -69,10 +81,11 @@
       <% end %>
     </tbody>
   </table>
+  <%= button_to "View All Pending Traders", admin_pending_traders_path, class: "btn btn-primary", method: :get %>
 <% else %>
   <p>No pending traders.</p>
 <% end %>
 
 <hr>
 
-<%= button_to "Log Out", logout_path, method: :delete %>
+<%= button_to "Log Out", logout_path, method: :delete, class: "btn btn-secondary" %>

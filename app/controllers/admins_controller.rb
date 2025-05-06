@@ -3,8 +3,8 @@ class AdminsController < ApplicationController
   before_action :set_trader, only: [:trader_show, :trader_edit, :trader_update, :approve]
 
   def dashboard
-    @traders = User.where(role: "trader")
-    @pending_traders = User.where(role: "trader", approved: [nil, false])
+    @traders = User.where(role: "trader").order(created_at: :desc).limit(5)
+    @pending_traders = User.where(role: "trader", approved: [nil, false]).order(created_at: :desc).limit(10)
   end
 
   def promote
@@ -13,18 +13,14 @@ class AdminsController < ApplicationController
     redirect_to admin_traders_path, notice: "User promoted to admin."
   end
 
-  def demote
-    user = User.find(params[:id])
-    user.update(role: "trader")
-    redirect_to admin_traders_path, notice: "#{user.email} is now a trader."
-  end
-
   def approve
     if @trader.update(approved: true, approved_at: Time.current)
       AdminMailer.approval_email(@trader).deliver_now
-      redirect_to admin_pending_traders_path, notice: "Trader approved successfully."
+      flash[:notice] = "Trader approved successfully." 
+      redirect_to admin_pending_traders_path
     else
-      redirect_to admin_pending_traders_path, alert: "Approval failed: #{@trader.errors.full_messages.to_sentence}"
+      flash[:alert] = "Approval failed: #{@trader.errors.full_messages.to_sentence}" 
+      redirect_to admin_pending_traders_path
     end
   end
 
@@ -42,12 +38,14 @@ class AdminsController < ApplicationController
     @trader.approved = false
 
     if @trader.save
-      redirect_to admin_traders_path, notice: "Trader created successfully."
+      flash[:notice] = "Trader created successfully."
+      redirect_to admin_traders_path
     else
+      flash.now[:alert] = "Trader creation failed: #{@trader.errors.full_messages.to_sentence}"
       render :trader_new
     end
   end
-
+  
   def trader_show
     @transactions = @trader.transactions.includes(:stock)
   end
@@ -57,8 +55,10 @@ class AdminsController < ApplicationController
 
   def trader_update
     if @trader.update(trader_params)
-      redirect_to admin_trader_path(@trader), notice: "Trader updated successfully."
+      flash[:notice] = "Trader updated successfully."
+      redirect_to admin_trader_path(@trader)
     else
+      flash.now[:alert] = "Trader update failed: #{@trader.errors.full_messages.to_sentence}"
       render :trader_edit
     end
   end
