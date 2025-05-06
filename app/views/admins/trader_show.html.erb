@@ -9,6 +9,38 @@
   <p><strong>Status:</strong> Pending Approval</p>
 <% end %>
 
+<h2>Transaction History</h2>
+
+<% if @transactions.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Type</th>
+        <th>Stock</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Total</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @transactions.each do |tx| %>
+        <tr>
+          <td><%= tx.id %></td>
+          <td><%= tx.transaction_type.capitalize %></td>
+          <td><%= tx.stock.symbol %></td>
+          <td><%= tx.quantity %></td>
+          <td><%= number_to_currency(tx.price) %></td>
+          <td><%= number_to_currency(tx.quantity * tx.price) %></td>
+          <td><%= tx.created_at.strftime("%B %d, %Y") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>This trader has no transactions yet.</p>
+<% end %>
 
 <%= link_to "Edit", edit_admin_trader_path(@trader) %> |
 <%= link_to "Back to Traders List", admin_traders_path %>
