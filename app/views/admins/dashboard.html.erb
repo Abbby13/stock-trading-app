@@ -1,5 +1,4 @@
 <h1>Welcome Admin!</h1>
-
 <p>You're logged in as <%= current_user.email %></p>
 
 <%= link_to "Trader Details", admin_traders_path, class: "button" %>
@@ -8,6 +7,7 @@
 <br>
 <%= link_to "Transaction Details", admin_transactions_path, class: "button" %>
 
+<hr>
 
 <h2>All Traders</h2>
 <table>
@@ -27,8 +27,11 @@
           <td><%= trader.email %></td>
           <td><%= trader.role %></td>
           <td>
-            <%= link_to 'Promote to Admin', promote_user_path(trader.id), method: :patch, data: { turbo_method: :patch } %>
-            <%= link_to "Demote to Trader", demote_user_path(trader), method: :patch, class: "button" if trader.role == "admin" %>
+            <% if trader.role == 'trader' %>
+              <%= link_to 'Promote to Admin', promote_user_path(trader.id), method: :patch, data: { turbo_method: :patch } %>
+            <% else %>
+              <%= link_to "Demote to Trader", demote_user_path(trader), method: :patch, class: "button" %>
+            <% end %>
           </td>
         </tr>
       <% end %>
@@ -39,27 +42,37 @@
 <hr>
 
 <h2>Pending Traders</h2>
-<table>
-  <thead>
-    <tr>
-      <th>Email</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% if @pending_traders.any? %>
+<% if @pending_traders.present? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Email</th>
+        <th>Registered On</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
       <% @pending_traders.each do |trader| %>
         <tr>
           <td><%= trader.email %></td>
+          <td><%= trader.created_at.strftime("%B %d, %Y") %></td>
+          <td><%= trader.approved ? "Approved" : "Pending Approval" %></td>
           <td>
-            <%= link_to "Approve", approve_admin_trader_path(trader), method: :patch, class: "button" %>
+            <% if !trader.approved %>
+            <%= button_to "Approve", approve_admin_trader_path(trader), method: :patch, class: "button" %>
+            <% else %>
+              <span>Already Approved</span>
+            <% end %>
           </td>
         </tr>
       <% end %>
-    <% else %>
-      <tr>
-        <td colspan="2">No pending traders.</td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+    </tbody>
+  </table>
+<% else %>
+  <p>No pending traders.</p>
+<% end %>
+
+<hr>
+
+<%= button_to "Log Out", logout_path, method: :delete %>
