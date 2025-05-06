@@ -19,12 +19,21 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
+    <%= stylesheet_link_tag "application", media: "all" %>
+  <%= javascript_include_tag "application", defer: true %>
+  <%= csrf_meta_tags %>
   </head>
 
   <body>
+  <header>
+    <nav>
+      <%= link_to "My Portfolio", portfolio_path, class: "btn btn-secondary" %> <%= button_to "Logout", logout_path, method: :delete, data: { confirm: "Log out?" } %>
+    </nav>
+  </header>
+
+  <div class="container">
     <%= yield %>
-  </body>
+  </div>
+</body>
+
 </html>
