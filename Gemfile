@@ -65,4 +65,5 @@ end
 
 gem "bcrypt", "~> 3.1"
 
-gem 'letter_opener'
+# gem 'letter_opener'
+# gem 'mail'

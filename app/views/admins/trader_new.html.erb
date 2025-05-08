@@ -29,10 +29,13 @@
   </div>
 
   <div>
-    <%= form.submit "Create Trader" %>
+    <%= form.submit "Create Trader", class: "btn btn-primary"%>
   </div>
 <% end %>
-<%= link_to "Back to Traders List", admin_traders_path %>
-<br>
-<br>
-<%= link_to "Back to Dashboard", admin_dashboard_path, class: "button" %>
+
+<hr>
+
+<div class="btn-group-horizontal" style="margin-top: 1rem;">
+  <%= link_to "Back to Traders List", admin_traders_path, class: "btn btn-secondary" %>
+  <%= link_to "Back to Dashboard", admin_dashboard_path, class: "btn btn-secondary" %>
+</div>

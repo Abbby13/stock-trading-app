@@ -40,8 +40,7 @@
           <td><%= trader.role %></td>
           <td>
             <% if trader.role == 'trader' %>
-              <%= button_to 'Promote to Admin', promote_user_path(trader.id), method: :patch, class: "btn btn-warning" %>
-              <%= button_to "Promote", promote_user_path(trader), method: :patch, class: "button" %>
+              <%= button_to 'Promote to Admin', promote_user_path(trader), method: :patch, class: "btn btn-warning" %>
             <% else %>
               <span>Admin</span>
             <% end %>
@@ -56,37 +55,8 @@
 <hr>
 
 <h2>Pending Traders</h2>
-<% if @pending_traders.present? %>
-  <table>
-    <thead>
-      <tr>
-        <th>Email</th>
-        <th>Registered On</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @pending_traders.each do |trader| %>
-        <tr>
-          <td><%= trader.email %></td>
-          <td><%= trader.created_at.strftime("%B %d, %Y") %></td>
-          <td><%= trader.approved ? "Approved" : "Pending Approval" %></td>
-          <td>
-            <% if !trader.approved %>
-              <%= button_to "Approve", approve_admin_trader_path(trader), method: :patch, class: "btn btn-warning" %>
-            <% else %>
-              <span>Already Approved</span>
-            <% end %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <%= button_to "View All Pending Traders", admin_pending_traders_path, class: "btn btn-primary", method: :get %>
-<% else %>
-  <p>No pending traders.</p>
-<% end %>
+<%= render "pending_traders_table" %>
+<%= button_to "View All Pending Traders", admin_pending_traders_path, class: "btn btn-primary", method: :get %>
 
 <hr>
 
