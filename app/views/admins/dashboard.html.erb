@@ -1,5 +1,4 @@
 <h1>Welcome Admin!</h1>
-<p>You're logged in as <%= current_user.email %></p>
 
 <% if flash[:notice] %>
   <div class="alert alert-success">
@@ -12,6 +11,8 @@
     <%= flash[:alert] %>
   </div>
 <% end %>
+
+<p>You're logged in as <%= current_user.email %></p>
 
 <div class="btn-group-horizontal">
   <%= button_to "Trader Details", admin_traders_path, class: "btn btn-primary", method: :get %>
