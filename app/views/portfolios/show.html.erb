@@ -1,5 +1,6 @@
 <h2>My Portfolio</h2>
 <p>Welcome, <%= current_user.email %> — here’s what you own:</p>
+
 <hr>
 
 <% if @holdings.any? %>
@@ -64,9 +65,6 @@
          ) %>
   </p>
 
-  <p>
-    <%= link_to "Buy More Stocks", stocks_path, class: "btn btn-primary" %>
-  </p>
 <% else %>
   <p>You don’t own any stocks yet.</p>
   <p><%= link_to "Buy some now", stocks_path, class: "btn btn-primary" %></p>

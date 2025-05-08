@@ -28,7 +28,7 @@
           <td><%= trader.role %></td>
           <td>
             <% if trader.role == 'trader' %>
-              <%= link_to 'Promote to Admin', promote_user_path(trader.id), method: :patch, data: { turbo_method: :patch } %>
+              <%= button_to "Promote", promote_user_path(trader), method: :patch, class: "button" %>
             <% else %>
               <%= link_to "Demote to Trader", demote_user_path(trader), method: :patch, class: "button" %>
             <% end %>

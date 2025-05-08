@@ -4,6 +4,8 @@ class Transaction < ApplicationRecord
 
   validate :sufficient_funds_and_shares, on: :create
 
+  validate :must_be_approved, on: :create
+
   private
 
   def sufficient_funds_and_shares
@@ -24,4 +26,10 @@ class Transaction < ApplicationRecord
       end
     end
   end
+
+  def must_be_approved
+    return if user.approved?
+    errors.add(:base, "Account not approved by admin yet")
+  end
+
 end
