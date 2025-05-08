@@ -1,13 +1,35 @@
 <h2>Trader Dashboard</h2>
+
+<% if flash[:alert] %>
+  <div id="error_explanation">
+    <p><strong><%= flash[:alert] %></strong></p>
+  </div>
+<% end %>
+
+<% if flash[:notice] %>
+  <div id="notice">
+    <p><%= flash[:notice] %></p>
+  </div>
+<% end %>
+
+
 <p>Welcome, <%= current_user.email %></p>
 
 <hr>
+<%= link_to "My Portfolio", portfolio_path, class: "btn btn-secondary" %>
 
 <!-- Cash balance and actions -->
 <p>
   <strong>Cash Balance:</strong>
   $<%= number_with_precision(@cash_balance, precision: 2) %>
 </p>
+
+<p>
+  <strong>Total Portfolio Value:</strong>
+  $<%= number_with_precision(@portfolio_value, precision: 2) %>
+</p>
+
+
 <p>
   <%= link_to "Deposit Funds", deposit_portfolio_path, class: "btn btn-success" %>
   <%= link_to "Withdraw Funds", withdraw_portfolio_path, class: "btn btn-warning" %>
@@ -27,24 +49,23 @@
 <hr>
 
 <h3>Available Stocks</h3>
-<% if @stocks.any? %>
+
+<% if @api_stocks.any? %>
   <table>
-    <thead>
-      <tr>
-        <th>Symbol</th>
-        <th>Company Name</th>
-        <th>Price</th>
-        <th>Action</th>
-      </tr>
-    </thead>
+    <thead><tr><th>Symbol</th><th>Name</th><th>Price</th><th>Action</th></tr></thead>
     <tbody>
-      <% @stocks.each do |stock| %>
+      <% @api_stocks.each do |s| %>
         <tr>
-          <td><%= stock.symbol %></td>
-          <td><%= stock.company_name %></td>
-          <td>$<%= number_with_precision(stock.current_price, precision: 2) %></td>
+          <td><%= s.symbol %></td>
+          <td><%= s.company_name %></td>
+          <<%= number_with_precision(s.current_price, precision: 2) %>
           <td>
-            <%= link_to "Buy", new_transaction_path(stock_id: stock.id), class: "btn" %>
+            <%= link_to "Buy",
+                  new_transaction_path(stock_id: nil, transaction_type: "buy",
+                                       symbol: s.symbol,
+                                       company_name: s.company_name,
+                                       price: s.current_price),
+                  class: "btn btn-primary" %>
           </td>
         </tr>
       <% end %>
@@ -53,6 +74,7 @@
 <% else %>
   <p>No matching stocks found.</p>
 <% end %>
+
 
 <hr>
 
@@ -73,13 +95,14 @@
     </thead>
     <tbody>
       <% @recent_transactions.each do |t| %>
-        <tr>
-          <td><%= t.created_at.strftime("%b %-d, %Y") %></td>
-          <td><%= t.stock.symbol %></td>
-          <td><%= t.transaction_type.capitalize %></td>
-          <td><%= t.quantity %></td>
-          <td>$<%= number_with_precision(t.price, precision: 2) %></td>
-        </tr>
+     <tr>
+  <td><%= t.created_at.strftime("%b %-d, %Y") %></td>
+  <td><%= t.stock.symbol %></td>
+  <td><%= t.transaction_type.present? ? t.transaction_type.capitalize : "N/A" %></td>
+  <td><%= t.quantity %></td>
+  <td>$<%= number_with_precision(t.price, precision: 2) %></td>
+</tr>
+
       <% end %>
     </tbody>
   </table>

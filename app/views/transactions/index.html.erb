@@ -28,7 +28,7 @@
                   .strftime("%b %-d, %Y at %l:%M %p") %>
           </td>
           <td><%= t.stock.symbol %></td>
-          <td><%= t.transaction_type.capitalize %></td>
+          <td><%= t.transaction_type.present? ? t.transaction_type.capitalize : "N/A" %></td>
           <td><%= t.quantity %></td>
           <td>$<%= number_with_precision(t.price, precision: 2) %></td>
         </tr>

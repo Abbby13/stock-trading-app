@@ -41,6 +41,7 @@
           <td>
             <% if trader.role == 'trader' %>
               <%= button_to 'Promote to Admin', promote_user_path(trader.id), method: :patch, class: "btn btn-warning" %>
+              <%= button_to "Promote", promote_user_path(trader), method: :patch, class: "button" %>
             <% else %>
               <span>Admin</span>
             <% end %>

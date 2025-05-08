@@ -2,15 +2,23 @@ class AdminsController < ApplicationController
   before_action :require_admin
   before_action :set_trader, only: [:trader_show, :trader_edit, :trader_update, :approve]
 
+  # GET /admin/dashboard
   def dashboard
     @traders = User.where(role: "trader").order(created_at: :desc).limit(5)
     @pending_traders = User.where(role: "trader", approved: [nil, false]).order(created_at: :desc).limit(10)
+    # only show truly approved traders here
+    @traders          = User.where(role: "trader", approved: true)
+    # show everything still awaiting approval
+    @pending_traders  = User.where(role: "trader", approved: [nil, false])
+    # optionally load all transactions for the “Transaction Details” link
+    @transactions     = Transaction.includes(:user, :stock).order(created_at: :desc)
   end
 
+  # PATCH /admin/promote/:id
   def promote
-    user = User.find(params[:id])
-    user.update(role: 'admin')
-    redirect_to admin_traders_path, notice: "User promoted to admin."
+    @trader.update!(role: "admin", approved: true)
+    redirect_to admin_dashboard_path,
+                notice: "#{@trader.email} has been promoted to Admin."
   end
 
   def approve
@@ -21,22 +29,38 @@ class AdminsController < ApplicationController
     else
       flash[:alert] = "Approval failed: #{@trader.errors.full_messages.to_sentence}" 
       redirect_to admin_pending_traders_path
+  # PATCH /admin/demote/:id
+  def demote
+    @trader.update!(role: "trader")
+    redirect_to admin_dashboard_path,
+                notice: "#{@trader.email} has been demoted to Trader."
+  end
+
+  # PATCH /admin/approve/:id
+  def approve
+    if @trader.update(approved: true, approved_at: Time.current)
+      AdminMailer.approval_email(@trader).deliver_now
+      redirect_to admin_dashboard_path,
+                  notice: "#{@trader.email} approved successfully."
+    else
+      redirect_to admin_dashboard_path,
+                  alert: "Approval failed: #{@trader.errors.full_messages.to_sentence}"
     end
   end
 
+  # GET /admin/traders
   def traders_index
-    @traders = User.where(role: "trader")
+    @traders = User.where(role: "trader", approved: true)
   end
 
+  # GET /admin/traders/new
   def trader_new
     @trader = User.new
   end
 
+  # POST /admin/traders
   def trader_create
-    @trader = User.new(trader_params)
-    @trader.role = "trader"
-    @trader.approved = false
-
+    @trader = User.new(trader_params.merge(role: "trader", approved: false))
     if @trader.save
       flash[:notice] = "Trader created successfully."
       redirect_to admin_traders_path
@@ -46,13 +70,23 @@ class AdminsController < ApplicationController
     end
   end
   
+      redirect_to admin_dashboard_path,
+                  notice: "Trader #{@trader.email} created successfully."
+    else
+      render :trader_new, status: :unprocessable_entity
+    end
+  end
+
+  # GET /admin/traders/:id
   def trader_show
     @transactions = @trader.transactions.includes(:stock)
   end
 
+  # GET /admin/traders/:id/edit
   def trader_edit
   end
 
+  # PATCH/PUT /admin/traders/:id
   def trader_update
     if @trader.update(trader_params)
       flash[:notice] = "Trader updated successfully."
@@ -60,28 +94,27 @@ class AdminsController < ApplicationController
     else
       flash.now[:alert] = "Trader update failed: #{@trader.errors.full_messages.to_sentence}"
       render :trader_edit
+      redirect_to admin_trader_path(@trader),
+                  notice: "Trader #{@trader.email} updated successfully."
+    else
+      render :trader_edit, status: :unprocessable_entity
     end
   end
 
-  def pending_traders
-    @pending_traders = User.where(role: "trader", approved: [nil, false])
-  end
-
+  # GET /admin/transactions
   def transactions_index
-    @transactions = Transaction.all
+    @transactions = Transaction.includes(:user, :stock).order(created_at: :desc)
   end
 
   private
 
   def require_admin
-    unless current_user&.role == "admin"
-      redirect_to root_path, alert: "Access denied."
-    end
+    redirect_to root_path, alert: "Access denied." unless current_user&.role == "admin"
   end
 
   def set_trader
     @trader = User.find_by(id: params[:id])
-    redirect_to admin_traders_path, alert: "Trader not found" if @trader.nil?
+    redirect_to admin_dashboard_path, alert: "Trader not found." unless @trader
   end
 
   def trader_params

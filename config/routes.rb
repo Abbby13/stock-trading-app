@@ -43,6 +43,9 @@ Rails.application.routes.draw do
   # Stocks route
   get '/stocks', to: 'stocks#index', as: 'stocks'
 
+  get "/quote", to: "stocks#quote", as: :quote
+
+
   resource :portfolio, only: :show do
     member do
       get  :deposit
