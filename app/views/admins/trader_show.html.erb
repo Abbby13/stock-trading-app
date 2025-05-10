@@ -1,13 +1,17 @@
 <h1>Trader Details</h1>
 
-<p><strong>Email:</strong> <%= @trader.email %></p>
-<p><strong>Role:</strong> <%= @trader.role %></p>
-<p><strong>Registered On:</strong> <%= @trader.created_at.strftime("%B %d, %Y") %></p>
-<% if @trader.approved_at %>
-  <p><strong>Approved On:</strong> <%= @trader.approved_at.strftime("%B %d, %Y") %></p>
-<% else %>
-  <p><strong>Status:</strong> Pending Approval</p>
-<% end %>
+<div class="trader-info">
+  <p><strong>Email:</strong> <%= @trader.email %></p>
+  <p><strong>Role:</strong> <%= @trader.role.capitalize %></p>
+  <p><strong>Registered On:</strong> <%= @trader.created_at.strftime("%B %d, %Y") %></p>
+  <% if @trader.approved_at %>
+    <p><strong>Approved On:</strong> <%= @trader.approved_at.strftime("%B %d, %Y") %></p>
+  <% else %>
+    <p><strong>Status:</strong> Pending Approval</p>
+  <% end %>
+</div>
+
+<hr>
 
 <h2>Transaction History</h2>
 
@@ -42,5 +46,10 @@
   <p>This trader has no transactions yet.</p>
 <% end %>
 
-<%= link_to "Edit", edit_admin_trader_path(@trader) %> |
-<%= link_to "Back to Traders List", admin_traders_path %>
+<hr>
+
+<div class="btn-group-horizontal" style="margin-top: 1rem;">
+  <%= link_to "Edit", edit_admin_trader_path(@trader), class: "btn btn-primary" %>
+  <%= link_to "Back to Traders List", admin_traders_path, class: "btn btn-secondary" %>
+  <%= link_to "Back to Dashboard", admin_dashboard_path, class: "btn btn-secondary" %>
+</div>

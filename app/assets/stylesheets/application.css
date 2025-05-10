@@ -95,6 +95,12 @@ form button {
   border-color: #d39e00;
 }
 
+.btn-group-horizontal {
+  display: flex;
+  gap: 0.5rem; 
+  flex-wrap: wrap;
+}
+
 /* 5) Tables */
 table {
   width: 100%;

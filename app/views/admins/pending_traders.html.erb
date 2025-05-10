@@ -1,31 +1,12 @@
 <h3>Pending Traders</h3>
-<% if @pending_traders.present? %>
-  <table>
-    <thead>
-      <tr>
-        <th>Email</th>
-        <th>Registered On</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @pending_traders.each do |trader| %>
-        <tr>
-          <td><%= trader.email %></td>
-          <td><%= trader.created_at.strftime("%B %d, %Y") %></td>
-          <td><%= trader.approved ? "Approved" : "Pending Approval" %></td>
-          <td>
-            <% if !trader.approved %>
-              <%= link_to "Approve", approve_admin_trader_path(trader), method: :patch, class: "button" %>
-            <% else %>
-              <span>Already Approved</span>
-            <% end %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% else %>
-  <p>No pending traders.</p>
+
+<% if flash[:notice] %>
+  <div class="alert alert-success"><%= flash[:notice] %></div>
 <% end %>
+<% if flash[:alert] %>
+  <div class="alert alert-danger"><%= flash[:alert] %></div>
+<% end %>
+
+<%= render "pending_traders_table" %>
+
+<%= link_to "Back to Dashboard", admin_dashboard_path, class: "btn btn-secondary" %>

@@ -2,9 +2,6 @@ Rails.application.routes.draw do
   get "portfolios/show"
   resources :transactions, only: [:index, :new, :create]
 
-  # get "transactions/new"
-  # get "transactions/create"
-  # get "transactions/index"
   get "stocks/index"
   get "users/new"
   get "sessions/new"
@@ -39,8 +36,7 @@ Rails.application.routes.draw do
 
   # Trader dashboard
   get '/trader/dashboard', to: 'users#dashboard', as: 'trader_dashboard'
-  
-  
+
   # Portfolio route
   get '/portfolio', to: 'portfolios#show', as: 'portfolio'
 
@@ -63,7 +59,7 @@ Rails.application.routes.draw do
     member do
       get :confirmation
     end   # closes member
-  end    
+  end
 
   root to: redirect("/trader/dashboard")
 end

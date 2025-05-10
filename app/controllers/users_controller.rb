@@ -8,48 +8,54 @@ class UsersController < ApplicationController
 
   # POST /signup
   def create
-    @user = User.new(user_params)
+    @user           = User.new(user_params)
+    @user.role      = "trader"
+    @user.approved  = true
+
     if @user.save
-      # sign them in (adjust if you have a different auth flow)
+      # Automatically create an empty portfolio
+      @user.create_portfolio!(cash_balance: 0)
+
+      # Send the pending signup email
+      UserMailer.pending_signup_email(@user).deliver_later
+
+      # Sign in
       session[:user_id] = @user.id
-      redirect_to trader_dashboard_path, notice: "Welcome aboard!"
+      redirect_to trader_dashboard_path, notice: "Signup complete! Please check your email."
     else
-      # @user.errors is now populated, and render :new will show your error block
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_entity, formats: [:html]
     end
   end
 
   # GET /dashboard
   def dashboard
+    # Load or lazily create a portfolio (starting at zero)
     @portfolio = current_user.portfolio ||
-    current_user.create_portfolio(cash_balance: 10_000)
+                 current_user.create_portfolio!(cash_balance: 0)
 
-@cash_balance    = @portfolio.cash_balance
-@portfolio_value = @portfolio.portfolio_stocks
-                  .includes(:stock)
-                  .where("quantity > 0")
-                  .sum { |h| h.quantity * h.stock.current_price }
-@recent_transactions = current_user.transactions
-                          .includes(:stock)
-                          .order(created_at: :desc)
-                          .limit(5)
+    @cash_balance    = @portfolio.cash_balance
+    @portfolio_value = @portfolio.portfolio_stocks
+                               .includes(:stock)
+                               .where("quantity > 0")
+                               .sum { |h| h.quantity * h.stock.current_price }
+    @recent_transactions = current_user.transactions
+                                       .includes(:stock)
+                                       .order(created_at: :desc)
+                                       .limit(5)
 
     if params[:query].present?
-      Rails.logger.debug "Search query received: #{params[:query]}"
       matches = AvaApi.search_symbols(params[:query])
-      Rails.logger.debug "API search results: #{matches.inspect}"
-
       @api_stocks = matches.map do |m|
-        symbol = m["1. symbol"]
-        name   = m["2. name"]
-        raw    = AvaApi.fetch_current_price(symbol)
-        price  = raw.dig("Global Quote", "05. price")&.to_f || 0.0
-        OpenStruct.new(symbol: symbol, company_name: name, current_price: price)
+        price = (AvaApi.fetch_current_price(m["1. symbol"])
+                        .dig("Global Quote", "05. price") || 0.0).to_f
+        OpenStruct.new(
+          symbol:        m["1. symbol"],
+          company_name:  m["2. name"],
+          current_price: price
+        )
       end
-      Rails.logger.debug "Transformed API stocks: #{@api_stocks.inspect}"
     else
       @api_stocks = []
-      Rails.logger.debug "No search query provided, @api_stocks is empty."
     end
   end
 
@@ -60,7 +66,7 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:email, :password, :password_confirmation)
+    params.require(:user)
+          .permit(:email, :password, :password_confirmation)
   end
 end
-
