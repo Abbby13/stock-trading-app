@@ -12,31 +12,27 @@
 
 <%= form_with model: @transaction, local: true do |form| %>
   <% if params[:symbol].present? %>
-  
     <%= hidden_field_tag :symbol, params[:symbol] %>
     <%= hidden_field_tag :company_name, params[:company_name] %>
     <%= hidden_field_tag :price, @transaction.price %>
-    <%= hidden_field_tag :stock_id, @stock.id %> 
-
+    <%= hidden_field_tag :stock_id, @stock.id %>
   <% else %>
-   
-    <%= form.hidden_field :stock_id, value: @stock.id %> 
+    <%= form.hidden_field :stock_id, value: @stock.id %>
   <% end %>
 
-  <%= form.hidden_field :transaction_type, value: @transaction.transaction_type %> 
+  <%= form.hidden_field :transaction_type, value: @transaction.transaction_type %>
 
-  
   <%= form.label :quantity, "Qty to buy" %><br>
-  <%= form.number_field :quantity, min: 1, required: true, value: @transaction.quantity %> 
+  <%= form.number_field :quantity, min: 1, required: true %>  <!-- Ensure field name is correct -->
 
-  
   <%= form.label :price, "Price per share" %><br>
-  <%= form.number_field :price, step: 0.01, value: @transaction.price, required: true %>
+  <%= form.number_field :price, step: 0.01, required: true %>
 
   <div>
     <%= form.submit @transaction.transaction_type.capitalize, class: "btn btn-primary" %>
   </div>
 <% end %>
+
 
   <%= link_to "Back to Dashboard", trader_dashboard_path, class: "btn btn-secondary" %>
   <%= link_to "My Portfolio", portfolio_path, class: "btn btn-secondary" %>
