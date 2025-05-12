@@ -51,21 +51,34 @@
 <h3>Available Stocks</h3>
 
 <% if @api_stocks.any? %>
-  <table>
-    <thead><tr><th>Symbol</th><th>Name</th><th>Price</th><th>Action</th></tr></thead>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Symbol</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Action</th>
+      </tr>
+    </thead>
     <tbody>
       <% @api_stocks.each do |s| %>
         <tr>
           <td><%= s.symbol %></td>
           <td><%= s.company_name %></td>
-          <<%= number_with_precision(s.current_price, precision: 2) %>
+          <td>
+            <%= number_with_precision(s.current_price, precision: 2) %>
+          </td>
           <td>
             <%= link_to "Buy",
-                  new_transaction_path(stock_id: nil, transaction_type: "buy",
-                                       symbol: s.symbol,
-                                       company_name: s.company_name,
-                                       price: s.current_price),
-                  class: "btn btn-primary" %>
+              new_transaction_path(
+                stock_id:        nil,
+                transaction_type: "buy",
+                symbol:           s.symbol,
+                company_name:     s.company_name,
+                price:            s.current_price
+              ),
+              class: "btn btn-primary"
+            %>
           </td>
         </tr>
       <% end %>
@@ -78,7 +91,6 @@
 
 <hr>
 
-<hr>
 
 <h3>Recent Transactions</h3>
 
