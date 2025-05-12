@@ -1,5 +1,5 @@
 class UserMailer < ApplicationMailer
-    default from: 'no-reply@stockapp.com'
+    default from: 'Stock App Admin no-reply@stockapp.com'
 
     def pending_signup_email(user)
       @user = user
