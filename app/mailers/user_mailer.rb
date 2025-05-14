@@ -10,4 +10,4 @@ class UserMailer < ApplicationMailer
       @user = user
       mail(to: @user.email, subject: "Your trader account has been approved!")
     end
-  end
+end

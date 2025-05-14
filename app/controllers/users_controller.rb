@@ -1,5 +1,4 @@
 require 'ostruct'
-
 class UsersController < ApplicationController
   before_action :require_login, only: [:dashboard]
 
@@ -12,14 +11,14 @@ class UsersController < ApplicationController
   def create
     @user           = User.new(user_params)
     @user.role      = "trader"
-    @user.approved  = true
+    @user.approved  = false
 
     if @user.save
       # Automatically create an empty portfolio
       @user.create_portfolio!(cash_balance: 0)
 
       # Send the pending signup email
-      UserMailer.pending_signup_email(@user).deliver_later
+      UserMailer.pending_signup_email(@user).deliver_now
 
       # Sign in
       session[:user_id] = @user.id
@@ -50,7 +49,7 @@ class UsersController < ApplicationController
       @api_stocks = matches.map do |m|
         price = (AvaApi.fetch_current_price(m["1. symbol"])
                         .dig("Global Quote", "05. price") || 0.0).to_f
-        OpenStruct.new(
+        ::OpenStruct.new(
           symbol:        m["1. symbol"],
           company_name:  m["2. name"],
           current_price: price

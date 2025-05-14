@@ -22,8 +22,8 @@
 
   <%= form.hidden_field :transaction_type, value: @transaction.transaction_type %>
 
-  <%= form.label :quantity, "Qty to buy" %><br>
-  <%= form.number_field :quantity, min: 1, required: true %>  <!-- Ensure field name is correct -->
+  <%= form.label :quantity, "Qty" %><br>
+  <%= form.number_field :quantity, min: 1, required: true %> 
 
   <%= form.label :price, "Price per share" %><br>
   <%= form.number_field :price, step: 0.01, required: true %>

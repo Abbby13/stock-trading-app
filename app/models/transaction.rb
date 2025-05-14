@@ -6,6 +6,20 @@ class Transaction < ApplicationRecord
 
   validate :must_be_approved, on: :create
 
+  TRANSACTION_TYPES = %w[buy sell].freeze
+
+  validates :transaction_type,
+            presence: true,
+            inclusion: { in: TRANSACTION_TYPES }
+
+  validates :quantity,
+            presence: true,
+            numericality: { only_integer: true, greater_than: 0 }
+
+  validates :price,
+            presence: true,
+            numericality: { greater_than: 0 }
+
   private
 
   def sufficient_funds_and_shares
