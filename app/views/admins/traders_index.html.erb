@@ -15,6 +15,12 @@
 <% if @traders.nil? || @traders.empty? %>
   <p>No traders found.</p>
 <% else %>
+
+<div class="btn-group-horizontal">
+  <%= button_to "Create New Trader", new_admin_trader_path, class: "btn btn-primary", method: :get %>
+  <%= button_to "Back to Dashboard", admin_dashboard_path, class: "btn btn-secondary", method: :get %>
+</div>
+<br>
   <table>
     <thead>
       <tr>
@@ -43,7 +49,6 @@
               <% else %>
                 <span>Admin</span>
               <% end %>
-              <!-- Add the Approve button if the trader is not approved -->
               <% if !trader.approved %>
                 <%= button_to "Approve", approve_admin_trader_path(trader), method: :patch, class: "btn btn-warning", form: { style: "display:inline" } %>
               <% else %>
@@ -57,7 +62,3 @@
   </table>
 <% end %>
 
-<div class="btn-group-horizontal">
-  <%= button_to "Create New Trader", new_admin_trader_path, class: "btn btn-primary", method: :get %>
-  <%= button_to "Back to Dashboard", admin_dashboard_path, class: "btn btn-secondary", method: :get %>
-</div>

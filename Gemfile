@@ -61,6 +61,7 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+  gem 'minitest-rails'
 end
 
 gem "bcrypt", "~> 3.1"
@@ -72,3 +73,4 @@ group :development, :test do
   gem 'rspec-rails', '~> 5.0'
   gem 'factory_bot_rails'
 end
+ 
