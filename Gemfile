@@ -66,9 +66,6 @@ end
 
 gem "bcrypt", "~> 3.1"
 
-# gem 'letter_opener'
-# gem 'mail'
-
 group :development, :test do
   gem 'rspec-rails', '~> 8.0.0'
 end

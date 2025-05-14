@@ -12,7 +12,7 @@ class UsersController < ApplicationController
   def create
     @user           = User.new(user_params)
     @user.role      = "trader"
-    @user.approved  = true
+    @user.approved  = false
 
     if @user.save
       # Automatically create an empty portfolio
