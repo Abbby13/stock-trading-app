@@ -1,3 +1,5 @@
+require 'ostruct'
+
 class UsersController < ApplicationController
   before_action :require_login, only: [:dashboard]
 

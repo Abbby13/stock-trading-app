@@ -1,7 +1,7 @@
 class HomeController < ApplicationController
   def index
     symbol = params[:symbol] || "MSFT"
-  
+
     Rails.cache.fetch("stock-#{symbol}", expires_in: 1.minute) do
       response = AvaApi.fetch_current_price(symbol)
       @symbol = response.dig("Global Quote", "01. symbol")
@@ -15,4 +15,4 @@ class HomeController < ApplicationController
     @symbol = "Error"
     @stock_price = e.message
   end
-end  
+end
