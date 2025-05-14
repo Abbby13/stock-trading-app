@@ -1,4 +1,3 @@
-# spec/models/user_spec.rb
 require_relative '../../config/environment'
 require 'rspec/rails'
 

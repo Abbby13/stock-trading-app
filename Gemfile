@@ -74,3 +74,8 @@ group :development, :test do
   gem 'factory_bot_rails'
 end
  
+gem "rails-controller-testing"
+
+group :test do
+  gem "shoulda-matchers", "~> 5.0"
+end

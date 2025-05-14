@@ -1,4 +1,3 @@
-# spec/factories/stocks.rb
 FactoryBot.define do
     factory :stock do
       sequence(:symbol)   { |n| "SYM#{n}" }

@@ -1,9 +1,5 @@
-# spec/rails_helper.rb
-
-# Shim to swallow any stray fixture_path= calls on example groups
 class RSpec::Core::ExampleGroup
     def self.fixture_path=(path)
-      # no-op
     end
   end
   
@@ -20,10 +16,9 @@ class RSpec::Core::ExampleGroup
   end
   
   RSpec.configure do |config|
-    # FactoryBot shortcuts (create, build, etc.)
+    
     config.include FactoryBot::Syntax::Methods
   
-    # Simple sign_in for request specs
     config.include Module.new {
       def sign_in(user)
         post login_path, params: { email: user.email, password: user.password }
@@ -35,4 +30,13 @@ class RSpec::Core::ExampleGroup
     config.infer_spec_type_from_file_location!
     config.filter_rails_from_backtrace!
   end
+
+  require 'shoulda/matchers'
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library        :rails
+  end
+end
   
