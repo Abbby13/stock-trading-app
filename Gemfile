@@ -67,5 +67,12 @@ end
 gem "bcrypt", "~> 3.1"
 
 group :development, :test do
-  gem 'rspec-rails', '~> 8.0.0'
+  gem 'rspec-rails', '~> 5.0'
+  gem 'factory_bot_rails'
+end
+ 
+gem "rails-controller-testing"
+
+group :test do
+  gem "shoulda-matchers", "~> 5.0"
 end
