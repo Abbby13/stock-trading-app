@@ -126,3 +126,5 @@
   <%= link_to "View All Transactions", transactions_path, class: "btn-secondary" %>
 </p>
 
+<%= button_to "Logout", logout_path, method: :delete, data: { confirm: "Log out?" } %>
+
