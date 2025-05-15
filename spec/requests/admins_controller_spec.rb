@@ -39,7 +39,7 @@ RSpec.describe "AdminsController", type: :request do
     expect(response).to have_http_status(:success)
   end
 
-  # As an admin, I want to create a new trader to manually add them to the app
+  # As an admin, I want to get the new trader form
   it "gets new trader form" do
     get new_admin_trader_path
     expect(response).to have_http_status(:success)
@@ -58,20 +58,30 @@ RSpec.describe "AdminsController", type: :request do
     expect(response).to redirect_to(admin_traders_path)
   end
 
-  # As an admin, I want to edit a specific trader to update his/her details
+  # As an admin, I want to get the edit trader form
   it "gets edit trader form" do
     trader = User.create!(email: "editme@example.com", password: "password", role: "trader", approved: true)
     get edit_admin_trader_path(trader)
     expect(response).to have_http_status(:success)
   end
 
-  # As an admin, I want to edit a specific trader to update his/her details
-  it "updates a trader" do
+  # As an admin, I want to update a trader's email
+  it "updates a trader's email only" do
     trader = User.create!(email: "updateme@example.com", password: "password", role: "trader", approved: true)
     patch admin_trader_path(trader), params: {
       user: { email: "updated@example.com" }
     }
     expect(trader.reload.email).to eq("updated@example.com")
+  end
+
+  # As an admin, I want to update a trader's password
+  it "updates a trader's password only" do
+    trader = User.create!(email: "changepassword@example.com", password: "oldpassword", role: "trader", approved: true)
+    patch admin_trader_path(trader), params: {
+      user: { password: "newpassword", password_confirmation: "newpassword" }
+    }
+    trader.reload
+    expect(trader.authenticate("newpassword")).to be_truthy
   end
 
   # As an admin, I want to have a page for pending trader signups to easily check if there is a new trader signup

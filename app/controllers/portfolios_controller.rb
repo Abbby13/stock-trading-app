@@ -9,7 +9,7 @@ class PortfoliosController < ApplicationController
   def deposit
     @portfolio = current_user.portfolio
   end
-  
+
   def perform_deposit
     amount = params[:amount].to_d
     if amount > 0
@@ -20,7 +20,7 @@ class PortfoliosController < ApplicationController
       render :deposit
     end
   end
-  
+
   def withdraw
     @portfolio = current_user.portfolio
   end
