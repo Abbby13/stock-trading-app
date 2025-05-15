@@ -69,3 +69,12 @@ gem "bcrypt", "~> 3.1"
 group :development, :test do
   gem 'rspec-rails', '~> 8.0.0'
 end
+
+group :test do
+  gem 'factory_bot_rails'
+end
+
+group :test do
+  gem 'rails-controller-testing'
+  gem 'shoulda-matchers', '~> 5.0'
+end
