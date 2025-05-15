@@ -22,7 +22,7 @@ class TransactionsController < ApplicationController
     @transaction.quantity ||= 1
     @transaction.price    ||= @stock.current_price
   end
-    
+
   # POST /transactions
   def create
     build_transaction_from_params
@@ -65,7 +65,7 @@ class TransactionsController < ApplicationController
                "buy"
     qty      = params.dig(:transaction, :quantity).to_i
     nested_price = params.dig(:transaction, :price)
-  
+
     # 2) Figure out stock_id from top-level or nested
     sid = params[:stock_id] || params.dig(:transaction, :stock_id)
     @stock = if params[:symbol].present?
@@ -78,7 +78,7 @@ class TransactionsController < ApplicationController
                # coming from portfolio “Sell” or “Buy”
                Stock.find(sid)
              end
-  
+
     # 3) Choose the price: top-level param, nested, or fallback to current_price
     price_val = if params[:price].present?
                   params[:price].to_f
@@ -87,7 +87,7 @@ class TransactionsController < ApplicationController
                 else
                   @stock.current_price
                 end
-  
+
     # 4) Build transaction with safe defaults
     @transaction = current_user.transactions.build(
       transaction_type: tx_type,
@@ -96,7 +96,6 @@ class TransactionsController < ApplicationController
       quantity:         (qty > 0 ? qty : 1)
     )
   end
-  
 
   def transaction_params
     params.require(:transaction).permit(:quantity, :price, :transaction_type)
