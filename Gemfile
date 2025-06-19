@@ -70,7 +70,7 @@ gem "bcrypt", "~> 3.1"
 # gem 'mail'
 
 group :development, :test do
-  gem 'rspec-rails', '~> 5.0'
+  gem 'rspec-rails', '~> 8.0'
   gem 'factory_bot_rails'
 end
  
